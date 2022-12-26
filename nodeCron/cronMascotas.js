@@ -22,7 +22,7 @@ let url = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/auth/login';
 async function getDataGC() {
     fetch(url, options).then(res => res.json())
     .then((json) => {
-  
+
         let url2 = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/administracion/bo/contactos/findByPrestaciones?codigo='+codigoPrestacionEncontrados;
         const options2 = {
             method: 'GET',
@@ -166,4 +166,4 @@ async function getDataGC() {
 }).catch(err => console.error('error:' + err));
 }
 // Schedule a job to run every two minutes
-const job = nodeCron.schedule("*/1 * * * *", getDataGC);
+const job = nodeCron.schedule("* 30 * * *", getDataGC);
