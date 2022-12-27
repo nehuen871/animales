@@ -46,6 +46,18 @@ async function getDataGC() {
         };
         fetch(url2, options2).then(res => res.json())
         .then((json) => {
+          const query = `TRUNCATE mascotas;`;
+            mysqlConnection.query(query,[], (err, rows, fields) => {
+            if(!err) {
+              if(rows.length == 0){
+                //res.json(0);
+              }else{
+                //res.json(rows);
+              }
+            } else {
+              //res.json(err);
+            }
+          });
         let i;
         for(i=0;i<json.length;i++){
         if(json[i].cuestionarioRespondido[0].split("|") == 'undefined'){
@@ -89,8 +101,8 @@ async function getDataGC() {
         let SexoAnimal = cuestionarioRespondido5[2];
         let NumeroContactoGC= json[i].numeroContacto;
         let Imagen = json[i].imagenes[0].archivo;
-        const query = `INSERT INTO mascotas (TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad) VALUES (?,?,?,?,?,?,?,?,?,?,?);`;
-        mysqlConnection.query(query,[TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad], (err, rows, fields) => {
+        const query2 = `INSERT INTO mascotas (TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad) VALUES (?,?,?,?,?,?,?,?,?,?,?);`;
+        mysqlConnection.query(query2,[TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad], (err, rows, fields) => {
           if(!err) {
             if(rows.length == 0){
               //res.json(0);
@@ -149,8 +161,8 @@ async function getDataGC() {
             let SexoAnimal = cuestionarioRespondido5[2];
             let NumeroContactoGC= json[i].numeroContacto;
             let Imagen = json[i].imagenes[0].archivo;
-            const query = `INSERT INTO mascotas (TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad) VALUES (?,?,?,?,?,?,?,?,?,?,?);`;
-            mysqlConnection.query(query,[TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad], (err, rows, fields) => {
+            const query3 = `INSERT INTO mascotas (TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad) VALUES (?,?,?,?,?,?,?,?,?,?,?);`;
+            mysqlConnection.query(query3,[TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad], (err, rows, fields) => {
             if(!err) {
                 if(rows.length == 0){
                 //res.json(0);
@@ -166,4 +178,4 @@ async function getDataGC() {
 }).catch(err => console.error('error:' + err));
 }
 // Schedule a job to run every two minutes
-const job = nodeCron.schedule("* 30 * * *", getDataGC);
+const job = nodeCron.schedule("*/1 * * * *", getDataGC);
