@@ -178,4 +178,4 @@ async function getDataGC() {
 }).catch(err => console.error('error:' + err));
 }
 // Schedule a job to run every two minutes
-const job = nodeCron.schedule("*/1 * * * *", getDataGC);
+const job = nodeCron.schedule("* */30 * * *", getDataGC);
