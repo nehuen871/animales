@@ -10,3 +10,5 @@ RewriteRule ^prestacion http://%{HTTP_HOST}%{REQUEST_URI} [P]
 
 # [R]: Redirect the request 
 RewriteRule (.*) http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+ErrorDocument 404 http://localhost:3001/prestacion/

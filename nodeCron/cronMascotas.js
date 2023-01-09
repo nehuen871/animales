@@ -23,7 +23,7 @@ async function getDataGC() {
     fetch(url, options).then(res => res.json())
     .then((json) => {
 
-        let url2 = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/administracion/bo/contactos/findByPrestaciones?codigo='+codigoPrestacionEncontrados;
+        let url2 = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/administracion/bo/contactos/findByPrestaciones?codigo='+codigoPrestacionEncontrados+'&estadogeneral=abierto';
         const options2 = {
             method: 'GET',
             headers: {
@@ -34,7 +34,7 @@ async function getDataGC() {
             }
         };
 
-        let url3 = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/administracion/bo/contactos/findByPrestaciones?codigo='+codigoPrestacionPerdidos;
+        let url3 = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/administracion/bo/contactos/findByPrestaciones?codigo='+codigoPrestacionPerdidos+'&estadogeneral=abierto';
         const options3 = {
             method: 'GET',
             headers: {
@@ -60,31 +60,31 @@ async function getDataGC() {
           });
         let i;
         for(i=0;i<json.length;i++){
-        if(json[i].cuestionarioRespondido[0].split("|") == 'undefined'){
+        if(json[i].cuestionarioRespondido[0] == undefined){
            var cuestionarioRespondido1 = "null";
         }else{
           var cuestionarioRespondido1 = json[i].cuestionarioRespondido[0].split("|");
         }
         
-        if(json[i].cuestionarioRespondido[1].split("|") == 'undefined'){
+        if(json[i].cuestionarioRespondido[1] == undefined){
           var cuestionarioRespondido2 = 'null';
         }else{
           var cuestionarioRespondido2 = json[i].cuestionarioRespondido[1].split("|");
         }
         
-        if(json[i].cuestionarioRespondido[2].split("|") == 'undefined'){
+        if(json[i].cuestionarioRespondido[2] == undefined){
           var cuestionarioRespondido3 = 'null';
         }else{
           var cuestionarioRespondido3 = json[i].cuestionarioRespondido[2].split("|");
         }
         
-        if(json[i].cuestionarioRespondido[3].split("|") == 'undefined'){
+        if(json[i].cuestionarioRespondido[3] == undefined){
           var cuestionarioRespondido4 = 'null';
         }else{
           var cuestionarioRespondido4 = json[i].cuestionarioRespondido[3].split("|");
         }
 
-        if(json[i].cuestionarioRespondido[4].split("|") == 'undefined'){
+        if(json[i].cuestionarioRespondido[4] == undefined){
           var cuestionarioRespondido5 = 'null';
         }else{
           var cuestionarioRespondido5 = json[i].cuestionarioRespondido[4].split("|");
@@ -100,7 +100,11 @@ async function getDataGC() {
         let Edad = cuestionarioRespondido4[2];
         let SexoAnimal = cuestionarioRespondido5[2];
         let NumeroContactoGC= json[i].numeroContacto;
-        let Imagen = json[i].imagenes[0].archivo;
+		if(json[i].imagenes[0] == undefined){
+          var Imagen = 'null';
+        }else{
+          var Imagen = json[i].imagenes[0].archivo;
+        }
         const query2 = `INSERT INTO mascotas (TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad) VALUES (?,?,?,?,?,?,?,?,?,?,?);`;
         mysqlConnection.query(query2,[TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad], (err, rows, fields) => {
           if(!err) {
@@ -121,46 +125,51 @@ async function getDataGC() {
     .then((json) => {
         let i;
         for(i=0;i<json.length;i++){
-            if(json[i].cuestionarioRespondido[0].split("|") == 'undefined'){
-                var cuestionarioRespondido1 = "null";
-             }else{
-               var cuestionarioRespondido1 = json[i].cuestionarioRespondido[0].split("|");
-             }
-             
-             if(json[i].cuestionarioRespondido[1].split("|") == 'undefined'){
-               var cuestionarioRespondido2 = 'null';
-             }else{
-               var cuestionarioRespondido2 = json[i].cuestionarioRespondido[1].split("|");
-             }
-             
-             if(json[i].cuestionarioRespondido[2].split("|") == 'undefined'){
-               var cuestionarioRespondido3 = 'null';
-             }else{
-               var cuestionarioRespondido3 = json[i].cuestionarioRespondido[2].split("|");
-             }
-             
-             if(json[i].cuestionarioRespondido[3].split("|") == 'undefined'){
-               var cuestionarioRespondido4 = 'null';
-             }else{
-               var cuestionarioRespondido4 = json[i].cuestionarioRespondido[3].split("|");
-             }
-     
-             if(json[i].cuestionarioRespondido[4].split("|") == 'undefined'){
-               var cuestionarioRespondido5 = 'null';
-             }else{
-               var cuestionarioRespondido5 = json[i].cuestionarioRespondido[4].split("|");
-             }
-            let TipoDeCaso= json[i].nombrePrestacion;
-            let EstadoDelTramite= json[i].estadoGeneral;
-            let Ovservaciones= json[i].observaciones;
-            let FechaInicio= json[i].fechaInicio;
-            let TipoAnimal= cuestionarioRespondido1[2];
-            let RazaAnimal= cuestionarioRespondido2[2];
-            let Tamano= cuestionarioRespondido3[2];
-            let Edad = cuestionarioRespondido4[2];
-            let SexoAnimal = cuestionarioRespondido5[2];
-            let NumeroContactoGC= json[i].numeroContacto;
-            let Imagen = json[i].imagenes[0].archivo;
+            if(json[i].cuestionarioRespondido[0] == undefined){
+           var cuestionarioRespondido1 = "null";
+        }else{
+          var cuestionarioRespondido1 = json[i].cuestionarioRespondido[0].split("|");
+        }
+        
+        if(json[i].cuestionarioRespondido[1] == undefined){
+          var cuestionarioRespondido2 = 'null';
+        }else{
+          var cuestionarioRespondido2 = json[i].cuestionarioRespondido[1].split("|");
+        }
+        
+        if(json[i].cuestionarioRespondido[2] == undefined){
+          var cuestionarioRespondido3 = 'null';
+        }else{
+          var cuestionarioRespondido3 = json[i].cuestionarioRespondido[2].split("|");
+        }
+        
+        if(json[i].cuestionarioRespondido[3] == undefined){
+          var cuestionarioRespondido4 = 'null';
+        }else{
+          var cuestionarioRespondido4 = json[i].cuestionarioRespondido[3].split("|");
+        }
+
+        if(json[i].cuestionarioRespondido[4] == undefined){
+          var cuestionarioRespondido5 = 'null';
+        }else{
+          var cuestionarioRespondido5 = json[i].cuestionarioRespondido[4].split("|");
+        }
+        
+        let TipoDeCaso= json[i].nombrePrestacion;
+        let EstadoDelTramite= json[i].estadoGeneral;
+        let Ovservaciones= json[i].observaciones;
+        let FechaInicio= json[i].fechaInicio;
+        let TipoAnimal= cuestionarioRespondido1[2];
+        let RazaAnimal= cuestionarioRespondido2[2];
+        let Tamano= cuestionarioRespondido3[2];
+        let Edad = cuestionarioRespondido4[2];
+        let SexoAnimal = cuestionarioRespondido5[2];
+        let NumeroContactoGC= json[i].numeroContacto;
+		if(json[i].imagenes[0] == undefined){
+          var Imagen = 'null';
+        }else{
+          var Imagen = json[i].imagenes[0].archivo;
+        }
             const query3 = `INSERT INTO mascotas (TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad) VALUES (?,?,?,?,?,?,?,?,?,?,?);`;
             mysqlConnection.query(query3,[TipoDeCaso, EstadoDelTramite, Ovservaciones, FechaInicio, TipoAnimal, RazaAnimal, SexoAnimal, Tamano, NumeroContactoGC, Imagen, Edad], (err, rows, fields) => {
             if(!err) {
