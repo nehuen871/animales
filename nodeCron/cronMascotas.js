@@ -2,7 +2,7 @@ const nodeCron = require("node-cron");
 const fetch = (...args) =>
 import('node-fetch').then(({default: fetch}) => fetch(...args));
 const mysqlConnection  = require('../db/db.js');
-
+const {urlAd,urlHml,urlProd,ambiente} = require('../db/vars.js');
 let data = {
     "usuario": "20333447658",
     "password": "Troquel1"
@@ -17,13 +17,18 @@ let data = {
     let codigoPrestacionPerdidos = '1661370752311';
     let codigoPrestacionEncontrados = '1666277376004';
     
-let url = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/auth/login';
-
+let url = urlAd;
+let url2 = "";
+let url3 = "";
 async function getDataGC() {
     fetch(url, options).then(res => res.json())
     .then((json) => {
-
-        let url2 = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/administracion/bo/contactos/findByPrestaciones?codigo='+codigoPrestacionEncontrados+'&estadogeneral=abierto';
+        if(ambiente == 'produccion'){
+          url2 = urlProd+codigoPrestacionEncontrados+'&estadoGeneral=Abierto';
+        }else{
+          url2 = urlHml+codigoPrestacionEncontrados+'&estadoGeneral=Abierto';
+        }
+        //let url2 = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/administracion/bo/contactos/findByPrestaciones?codigo='+codigoPrestacionEncontrados+'&estadoGeneral=Abierto';
         const options2 = {
             method: 'GET',
             headers: {
@@ -33,8 +38,12 @@ async function getDataGC() {
             //'client_secret': JSON.stringify(data.password)
             }
         };
-
-        let url3 = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/administracion/bo/contactos/findByPrestaciones?codigo='+codigoPrestacionPerdidos+'&estadogeneral=abierto';
+        if(ambiente == 'produccion'){
+          url3 = urlProd+codigoPrestacionPerdidos+'&estadoGeneral=Abierto';
+        }else{
+          url3 = urlHml+codigoPrestacionPerdidos+'&estadoGeneral=Abierto';
+        }
+        //let url3 = 'https://servicios-hml.gcba.gob.ar/api/suaci/v1/administracion/bo/contactos/findByPrestaciones?codigo='+codigoPrestacionPerdidos+'&estadoGeneral=Abierto';
         const options3 = {
             method: 'GET',
             headers: {
@@ -187,4 +196,4 @@ async function getDataGC() {
 }).catch(err => console.error('error:' + err));
 }
 // Schedule a job to run every two minutes
-const job = nodeCron.schedule("* */30 * * *", getDataGC);
+const job = nodeCron.schedule("*/1 * * * *", getDataGC);
